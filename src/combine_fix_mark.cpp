@@ -1832,7 +1832,16 @@ void mark_function(Chunk *pc)
               __func__, __LINE__, get_token_name(pc->GetType()),
               pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
 
-      tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+      if (  language_is_set(LANG_VALA)
+         && pc->IsString("Object"))
+      {
+         pc->SetType(CT_GOBJ_CALL);
+         tmp = flag_parens(next, PCF_IN_GOBJ_CALL, CT_FPAREN_OPEN, CT_GOBJ_CALL, false);
+      }
+      else
+      {
+         tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+      }
 
       if (  tmp->IsNotNullChunk()
          && tmp->Is(CT_BRACE_OPEN)

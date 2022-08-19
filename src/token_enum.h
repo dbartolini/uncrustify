@@ -370,6 +370,8 @@ enum E_Token
    // Vala stuff
    CT_CONSTRUCT,        // braced "construct { }" or qualifier "(construct int x)"
    CT_LAMBDA,
+   CT_GOBJ_CALL,        // GObject-Style construction "Object(property: value[, ...])"
+   CT_GOBJ_PROP_COLON,  //
 
    // Java
    CT_ASSERT,       // assert EXP1 [ : EXP2 ] ;

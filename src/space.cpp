@@ -636,6 +636,24 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
+   if (language_is_set(LANG_VALA))
+   {
+      if (first->Is(CT_GOBJ_PROP_COLON))
+      {
+         log_rule("sp_after_gobj_prop_colon");
+         return(options::sp_after_gobj_prop_colon());
+      }
+
+      if (second->Is(CT_GOBJ_PROP_COLON))
+      {
+         if (first->Is(CT_WORD))
+         {
+            log_rule("sp_before_gobj_prop_colon");
+            return(options::sp_before_gobj_prop_colon());
+         }
+      }
+   }
+
    // "a,b" vs. "a, b"
    if (first->Is(CT_COMMA))                         // see the tests cpp:34520-34524
    // see the tests c-sharp:12200-12202
@@ -1526,6 +1544,7 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       || first->Is(CT_FUNC_CTOR_VAR)
       || first->Is(CT_CNG_HASINC)
       || first->Is(CT_CNG_HASINCN)
+      || first->Is(CT_GOBJ_CALL)
       || (  first->Is(CT_BRACE_CLOSE)
          && first->GetParentType() == CT_BRACED_INIT_LIST
          && second->Is(CT_FPAREN_OPEN))

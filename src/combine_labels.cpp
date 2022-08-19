@@ -311,6 +311,32 @@ void combine_labels()
                      next->SetType(CT_LABEL_COLON);
                   }
                }
+               else if (next->GetFlags().test_any(PCF_IN_GOBJ_CALL))
+               {
+                  cur->SetType(CT_WORD);
+                  next->SetType(CT_GOBJ_PROP_COLON);
+
+                  Chunk *nnext = next->GetNext();
+
+                  if (nnext->IsNullChunk())
+                  {
+                     return;
+                  }
+
+                  while ((nnext = nnext->GetNext())->IsNotNullChunk())
+                  {
+                     if (nnext->Is(CT_SEMICOLON))
+                     {
+                        break;
+                     }
+
+                     if (nnext->Is(CT_COLON))
+                     {
+                        nnext->GetPrev()->SetType(CT_WORD);
+                        nnext->SetType(CT_GOBJ_PROP_COLON);
+                     }
+                  }
+               }
                else if (next->GetFlags().test_any(PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
                   next->SetType(CT_BIT_COLON);

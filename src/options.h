@@ -1325,6 +1325,16 @@ sp_after_noexcept;
 extern Option<iarf_e>
 sp_vala_after_translation;
 
+// (Vala) Add or remove space between a property and ':' in a GObject-Style
+// construction statement.
+extern Option<iarf_e>
+sp_before_gobj_prop_colon; // = IARF_REMOVE
+
+// (Vala) Add or remove space between a ':' and a value in a GObject-Style
+// construction statement.
+extern Option<iarf_e>
+sp_after_gobj_prop_colon; // = IARF_ADD
+
 // If true, a <TAB> is inserted after #define.
 extern Option<bool>
 force_tab_after_define;
