@@ -6,6 +6,6 @@ int main()
 	        argument, argument));
 
 	int the_result = a_very_long_function_name_taking_most_of_the_line(argument,
-	                argument, argument);
+	        argument, argument);
 	return 0;
 }

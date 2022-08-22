@@ -1160,6 +1160,7 @@
 60091  cpp/Issue_3863.cfg                                   cpp/Issue_3863_3.cpp
 60092  cpp/Issue_3865.cfg                                   cpp/Issue_3865.cpp
 60093  cpp/Issue_3865_2.cfg                                 cpp/Issue_3865.cpp
+60094  cpp/Issue_3752.cfg                                   cpp/Issue_3752.cpp
 
 60100  cpp/sp_qualifier_unnamed_ptr_star-i.cfg              cpp/sp_qualifier_ptr_star.cpp
 60101  cpp/sp_qualifier_unnamed_ptr_star-a.cfg              cpp/sp_qualifier_ptr_star.cpp

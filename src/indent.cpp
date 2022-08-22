@@ -2933,7 +2933,9 @@ void indent_text()
             }
             log_indent();
 
-            if (  pc->GetLevel() == pc->GetBraceLevel()
+            if (  (  pc->GetLevel() == pc->GetBraceLevel() // Issue #3752
+                  || (  pc->GetLevel() > pc->GetBraceLevel()
+                     && !language_is_set(LANG_OC)))
                && !options::indent_ignore_first_continue()
                && (  pc->Is(CT_FPAREN_OPEN)
                   || pc->Is(CT_RPAREN_OPEN)                   // Issue #1170
@@ -2970,15 +2972,18 @@ void indent_text()
                }
                else
                {
-                  int idx = frm.size() - 1;
+                  int   idx = frm.size() - 1;
 #if 1
-                  Chunk *cur  = frm.at(idx).pc;
+                  Chunk *cur = frm.at(idx).pc;
+
                   while (idx > 0)
                   {
                      Chunk *prev = frm.at(idx - 1).pc;
-                     if (!prev->IsOnSameLine(cur))
-                        break;
 
+                     if (!prev->IsOnSameLine(cur))
+                     {
+                        break;
+                     }
                      idx--;
                      cur = frm.at(idx).pc;
                   }
