@@ -1173,3 +1173,7 @@
 60109  cpp/sp_qualifier_ptr_star_trailing-a.cfg             cpp/sp_qualifier_ptr_star.cpp
 60110  cpp/sp_qualifier_ptr_star_trailing-r.cfg             cpp/sp_qualifier_ptr_star.cpp
 60111  cpp/sp_qualifier_ptr_star_trailing-f.cfg             cpp/sp_qualifier_ptr_star.cpp
+
+60200  cpp/indent_continue-0.cfg                            cpp/indent_continue.cpp
+60201  cpp/indent_continue-4.cfg                            cpp/indent_continue.cpp
+60202  cpp/indent_continue-neg-4.cfg                        cpp/indent_continue.cpp

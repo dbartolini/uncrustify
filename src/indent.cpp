@@ -2667,7 +2667,6 @@ void indent_text()
          {
             frm.top().indent_tab = frm.top().indent;
          }
-         bool skipped = false;
          log_rule_B("indent_inside_ternary_operator");
          log_rule_B("indent_align_paren");
 
@@ -2745,7 +2744,6 @@ void indent_text()
                   exit(EX_SOFTWARE);
                }
                idx--;
-               skipped = true;
             }
             // PR#381
             log_rule_B("indent_param");
@@ -2799,13 +2797,11 @@ void indent_text()
                   && frm.at(idx).pc->IsOnSameLine(frm.top().pc))
             {
                idx--;
-               skipped = true;
             }
             frm.top().indent = frm.at(idx).indent + indent_size;
             log_indent();
 
             frm.top().indent_tab = frm.top().indent;
-            skipped = true;
          }
          else if (  (  pc->IsString("(")
                     && !options::indent_paren_nl())
@@ -2852,7 +2848,6 @@ void indent_text()
                         && frm.at(sub).pc->IsOnSameLine(frm.top().pc))
                   {
                      sub--;
-                     skipped = true;
                   }
 
                   if (  (  frm.at(sub + 1).type == CT_CLASS_COLON
@@ -2866,7 +2861,6 @@ void indent_text()
                log_indent();
 
                frm.top().indent_tab = frm.top().indent;
-               skipped = true;
             }
             else
             {
@@ -2927,8 +2921,7 @@ void indent_text()
 
          if (  pc->GetParentType() != CT_OC_AT
             && (  options::indent_ignore_first_continue()
-               || options::indent_continue() != 0)
-            && !skipped)
+               || options::indent_continue() != 0))
          {
             if (options::indent_ignore_first_continue())
             {
@@ -2949,10 +2942,6 @@ void indent_text()
                      && pc->GetParentType() != CT_OC_MSG)
                   || pc->Is(CT_ANGLE_OPEN)))                  // Issue #1170
             {
-               //log_rule_B("indent_continue");
-               //frm.top().indent += abs(options::indent_continue());
-               //   frm.top().indent      = calc_indent_continue(frm);
-               //   frm.top().indent_cont = true;
                log_rule_B("use_indent_continue_only_once");
 
                if (  (options::use_indent_continue_only_once())
@@ -2981,7 +2970,20 @@ void indent_text()
                }
                else
                {
-                  frm.top().indent = calc_indent_continue(frm);
+                  int idx = frm.size() - 1;
+#if 1
+                  Chunk *cur  = frm.at(idx).pc;
+                  while (idx > 0)
+                  {
+                     Chunk *prev = frm.at(idx - 1).pc;
+                     if (!prev->IsOnSameLine(cur))
+                        break;
+
+                     idx--;
+                     cur = frm.at(idx).pc;
+                  }
+#endif
+                  frm.top().indent = calc_indent_continue(frm, idx - 1);
                   log_indent();
                   frm.top().indent_cont = true;
 
