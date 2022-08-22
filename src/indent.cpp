@@ -67,7 +67,7 @@ using namespace uncrustify;
  *    a_really_long_function_name(
  *       param1, param2);
  *    a_really_long_function_name(param1,
- *                               param2);
+ *                                param2);
  *
  * Assignments:
  * Assignments are continued aligned with the first item after the assignment,
