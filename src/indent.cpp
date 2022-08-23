@@ -2960,17 +2960,18 @@ void indent_text()
                   && vardefcol != 0)
                {
                   /*
-                   * The value of the indentation for a continuation line is calculate
-                   * differently if the line is:
-                   *   a declaration :your case with QString fileName ...
-                   *   an assignment  :your case with pSettings = new QSettings( ...
-                   * At the second case the option value might be used twice:
+                   * The indentation for a continuation line is calculated
+                   * differently whether the line is:
+                   *   a declaration: QString fileName ...
+                   *   an assignment: pSettings = new QSettings( ...
+                   *
+                   * In the latter case, the value of indent_continue might be used twice:
                    *   at the assignment
                    *   at the function call (if present)
-                   * If you want to prevent the double use of the option value
-                   * you may use the new option :
-                   *   use_indent_continue_only_once
-                   * with the value "true".
+                   *
+                   * To prevent indent_continue from indenting twice, you may use:
+                   *   use_indent_continue_only_once = true
+                   *
                    * use/don't use indent_continue once Guy 2016-05-16
                    */
 

@@ -4246,17 +4246,17 @@ include_category_2;
 extern Option<bool>
 use_indent_func_call_param; // = true
 
-// The value of the indentation for a continuation line is calculated
-// differently if the statement is:
-// - a declaration: your case with QString fileName ...
-// - an assignment: your case with pSettings = new QSettings( ...
+// The indentation for a continuation line is calculated
+// differently whether the line is:
+//   a declaration: QString fileName ...
+//   an assignment: pSettings = new QSettings( ...
 //
-// At the second case the indentation value might be used twice:
-// - at the assignment
-// - at the function call (if present)
+// In the latter case, the value of indent_continue might be used twice:
+//   at the assignment
+//   at the function call (if present)
 //
-// To prevent the double use of the indentation value, use this option with the
-// value 'true'.
+// To prevent indent_continue from indenting twice, you may use:
+//   use_indent_continue_only_once = true
 //
 // true:  indent_continue will be used only once
 // false: indent_continue will be used every time (default)
