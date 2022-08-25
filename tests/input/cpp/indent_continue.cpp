@@ -47,3 +47,9 @@ auto x = [] {
 auto x =
 [] {
 };
+
+return foo ?
+bar : baz;
+
+return foo ? fn(
+bar : baz);
