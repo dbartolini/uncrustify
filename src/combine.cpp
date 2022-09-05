@@ -200,6 +200,12 @@ static void handle_cpp_template(Chunk *pc);
  */
 static void handle_cpp_lambda(Chunk *pc);
 
+/**
+ * Verify and then mark C# lambda expressions.
+ * The expected format is '(...) => {...}'
+ * pc is '(' CT_FPAREN_OPEN
+ */
+static void handle_vala_lambda(Chunk *pc);
 
 /**
  * We are on the D 'template' keyword.
@@ -572,6 +578,13 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          handle_oc_available(pc);
          return;
       }
+   }
+
+   if (  language_is_set(LANG_CS | LANG_VALA)
+      && pc->Is(CT_NONE)
+      && pc->IsString("=>"))
+   {
+      handle_vala_lambda(pc);
    }
 
    // C# and Vala stuff
@@ -2683,6 +2696,64 @@ static void handle_cpp_lambda(Chunk *sq_o)
       }
    }
    mark_cpp_lambda(sq_o);
+} // handle_cpp_lambda
+
+
+static void handle_vala_lambda(Chunk *pa_o)
+{
+   LOG_FUNC_ENTRY();
+
+   Chunk *ret = pa_o;
+   ret->SetType(CT_LAMBDA_RET);
+
+   Chunk *br_o = pa_o->GetNextNcNnl();
+
+   if (br_o->IsNullChunk())
+   {
+      LOG_FMT(LFCNR, "%s(%d): br_o is null. Return\n", __func__, __LINE__);
+      return;
+   }
+
+   if (br_o->IsNot(CT_BRACE_OPEN))
+   {
+      LOG_FMT(LFCNR, "%s(%d): br_o is '%s'/%s\n",
+              __func__, __LINE__,
+              br_o->Text(), get_token_name(br_o->GetType()));
+      LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
+      return;
+   }
+   // and now find the '}'
+   Chunk *br_c = br_o->GetClosingParen();
+
+   if (br_c->IsNullChunk())
+   {
+      LOG_FMT(LFCNR, "%s(%d): return\n", __func__, __LINE__);
+      return;
+   }
+   br_o->SetParentType(CT_LAMBDA);
+   br_c->SetParentType(CT_LAMBDA);
+
+   if (ret->IsNotNullChunk())
+   {
+      ret->SetType(CT_LAMBDA_RET);
+      ret = ret->GetNextNcNnl();
+
+      while (ret != br_o)
+      {
+         make_type(ret);
+         ret = ret->GetNextNcNnl();
+      }
+   }
+   // Mark lambda
+   auto *brace_close = pa_o->GetNextType(CT_BRACE_CLOSE, pa_o->GetLevel());
+
+   if (brace_close->GetParentType() == CT_LAMBDA)
+   {
+      for (auto *pc = pa_o; pc != brace_close; pc = pc->GetNextNcNnl())
+      {
+         pc->SetFlagBits(PCF_IN_LAMBDA);
+      }
+   }
 } // handle_cpp_lambda
 
 

@@ -79,6 +79,7 @@ void mark_cpp_constructor(Chunk *pc);
  */
 void mark_cpp_lambda(Chunk *square_open);
 
+void mark_vala_lambda(Chunk *brace_open);
 
 /**
  * Marks statement starts in a macro body.
