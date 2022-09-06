@@ -903,8 +903,9 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       return(options::sp_before_sparen());
    }
 
-   if (  first->Is(CT_LAMBDA)
-      || second->Is(CT_LAMBDA))
+   if (  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
+      && (  first->Is(CT_LAMBDA)
+         || second->Is(CT_LAMBDA)))
    {
       // Add or remove space around assignment operator '=', '+=', etc.
       log_rule("sp_assign (lambda)");
@@ -917,18 +918,21 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    // Overrides sp_assign.
    if (  (options::sp_cpp_lambda_assign() != IARF_IGNORE)
       && (  (  first->Is(CT_SQUARE_OPEN)
-            && first->GetParentType() == CT_CPP_LAMBDA
+            && (  language_is_set(LANG_CPP)
+               && first->GetParentType() == CT_CPP_LAMBDA)
             && second->Is(CT_ASSIGN))
          || (  first->Is(CT_ASSIGN)
             && second->Is(CT_SQUARE_CLOSE)
-            && second->GetParentType() == CT_CPP_LAMBDA)))
+            && (  language_is_set(LANG_CPP)
+               && second->GetParentType() == CT_CPP_LAMBDA))))
    {
       log_rule("sp_cpp_lambda_assign");
       return(options::sp_cpp_lambda_assign());
    }
 
    if (  first->Is(CT_SQUARE_CLOSE)
-      && first->GetParentType() == CT_CPP_LAMBDA)
+      && (  language_is_set(LANG_CPP)
+         && first->GetParentType() == CT_CPP_LAMBDA))
    {
       // Handle the special lambda case for C++11:
       //    [](Something arg){.....}
@@ -976,7 +980,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  first->Is(CT_BRACE_CLOSE)
-      && first->GetParentType() == CT_CPP_LAMBDA
+      && (  language_is_set(LANG_CPP)
+         && first->GetParentType() == CT_CPP_LAMBDA)
       && second->Is(CT_FPAREN_OPEN))
    {
       // Add or remove space between a lambda body and its call operator of an
@@ -1099,9 +1104,11 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  first->Is(CT_TRAILING_RET)
-      || first->Is(CT_CPP_LAMBDA_RET)
+      || (  language_is_set(LANG_CPP)
+         && first->Is(CT_CPP_LAMBDA_RET))
       || second->Is(CT_TRAILING_RET)
-      || second->Is(CT_CPP_LAMBDA_RET))
+      || (  language_is_set(LANG_CPP)
+         && second->Is(CT_CPP_LAMBDA_RET)))
    {
       // Add or remove space around trailing return operator '->'.
       log_rule("sp_trailing_return");

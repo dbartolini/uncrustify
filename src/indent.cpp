@@ -1351,7 +1351,8 @@ void indent_text()
                frm.pop(__func__, __LINE__, pc);
             }
 
-            if (  (frm.top().type == CT_LAMBDA)
+            if (  (  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
+                  && frm.top().type == CT_LAMBDA)
                && (  pc->Is(CT_SEMICOLON)
                   || pc->Is(CT_COMMA)
                   || pc->Is(CT_BRACE_OPEN)))
@@ -1686,7 +1687,8 @@ void indent_text()
             LOG_FMT(LINDENT2, "%s(%d): indent_macro_brace\n", __func__, __LINE__);
          }
          else if (  options::indent_cpp_lambda_body()
-                 && pc->GetParentType() == CT_CPP_LAMBDA)
+                 && (  language_is_set(LANG_CPP)
+                    && pc->GetParentType() == CT_CPP_LAMBDA))
          {
             log_rule_B("indent_cpp_lambda_body");
             frm.top().brace_indent = frm.prev().indent;
@@ -1793,8 +1795,8 @@ void indent_text()
             log_indent_tmp();
          }
          else if (  language_is_set(LANG_CPP)
-                 && options::indent_cpp_lambda_only_once()
-                 && (pc->GetParentType() == CT_CPP_LAMBDA))
+                 && pc->GetParentType() == CT_CPP_LAMBDA
+                 && options::indent_cpp_lambda_only_once())
          {
             // test example cpp:30756
             log_rule_B("indent_cpp_lambda_only_once");
@@ -1868,7 +1870,8 @@ void indent_text()
          }
          else if (  !options::indent_paren_open_brace()
                  && !language_is_set(LANG_CS)
-                 && pc->GetParentType() == CT_CPP_LAMBDA
+                 && (  language_is_set(LANG_CPP)
+                    && pc->GetParentType() == CT_CPP_LAMBDA)
                  && (  pc->TestFlags(PCF_IN_FCN_DEF)
                     || pc->TestFlags(PCF_IN_FCN_CTOR)) // Issue #2152
                  && pc->GetNextNc()->IsNewline())
@@ -2729,12 +2732,14 @@ void indent_text()
                         && frm.at(idx).type != CT_MEMBER
                         && frm.at(idx).type != CT_QUESTION
                         && frm.at(idx).type != CT_COND_COLON
-                        && frm.at(idx).type != CT_LAMBDA
+                        && (  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
+                           && frm.at(idx).type != CT_LAMBDA)
                         && frm.at(idx).type != CT_ASSIGN_NL)
                      || frm.at(idx).pc->IsOnSameLine(frm.top().pc))
                   && (  frm.at(idx).type != CT_CLASS_COLON
                      && frm.at(idx).type != CT_CONSTR_COLON
-                     && !(  frm.at(idx).type == CT_LAMBDA
+                     && !(  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
+                         && frm.at(idx).type == CT_LAMBDA
                          && frm.at(idx).pc->GetPrevNc()->GetType() == CT_NEWLINE)))
             {
                if (idx == 0)

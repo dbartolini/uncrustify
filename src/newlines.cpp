@@ -1989,7 +1989,8 @@ static bool is_func_call_or_def(Chunk *pc)
       || pc->GetParentType() == CT_OC_CLASS
       || pc->GetParentType() == CT_OC_MSG_DECL
       || pc->GetParentType() == CT_CS_PROPERTY
-      || pc->GetParentType() == CT_CPP_LAMBDA)
+      || (  language_is_set(LANG_CPP)
+         && pc->GetParentType() == CT_CPP_LAMBDA))
    {
       return(true);
    }
@@ -2487,7 +2488,8 @@ static void newlines_brace_pair(Chunk *br_open)
       || br_open->GetParentType() == CT_FUNC_CLASS_DEF
       || br_open->GetParentType() == CT_OC_CLASS
       || br_open->GetParentType() == CT_CS_PROPERTY
-      || br_open->GetParentType() == CT_CPP_LAMBDA
+      || (  language_is_set(LANG_CPP)
+         && br_open->GetParentType() == CT_CPP_LAMBDA)
       || br_open->GetParentType() == CT_FUNC_CALL
       || br_open->GetParentType() == CT_FUNC_CALL_USER)
    {
@@ -2532,7 +2534,8 @@ static void newlines_brace_pair(Chunk *br_open)
             log_rule_B("nl_fcall_brace");
             val = ((br_open->GetParentType() == CT_CS_PROPERTY) ?
                    options::nl_property_brace() :
-                   ((br_open->GetParentType() == CT_CPP_LAMBDA) ?
+                   (((  language_is_set(LANG_CPP)
+                     && br_open->GetParentType() == CT_CPP_LAMBDA)) ?
                     options::nl_cpp_ldef_brace() :
                     options::nl_fcall_brace()));
          }
@@ -2979,12 +2982,14 @@ static void newline_func_multi_line(Chunk *start)
    {
       Chunk *start_next         = start->GetNextNcNnl();
       bool  has_leading_closure = (  start_next->GetParentType() == CT_OC_BLOCK_EXPR
-                                  || start_next->GetParentType() == CT_CPP_LAMBDA
+                                  || (  language_is_set(LANG_CPP)
+                                     && start_next->GetParentType() == CT_CPP_LAMBDA)
                                   || start_next->Is(CT_BRACE_OPEN));
 
       Chunk *prev_end            = pc->GetPrevNcNnl();
       bool  has_trailing_closure = (  prev_end->GetParentType() == CT_OC_BLOCK_EXPR
-                                   || prev_end->GetParentType() == CT_CPP_LAMBDA
+                                   || (  language_is_set(LANG_CPP)
+                                      && prev_end->GetParentType() == CT_CPP_LAMBDA)
                                    || prev_end->Is(CT_BRACE_OPEN));
 
       if (  add_start
@@ -3053,10 +3058,12 @@ static void newline_func_multi_line(Chunk *start)
                      Chunk *after_comma = pc->GetNextNcNnl();
 
                      if (!(  (  prev_comma->GetParentType() == CT_OC_BLOCK_EXPR
-                             || prev_comma->GetParentType() == CT_CPP_LAMBDA
+                             || (  language_is_set(LANG_CPP)
+                                && prev_comma->GetParentType() == CT_CPP_LAMBDA)
                              || prev_comma->Is(CT_BRACE_OPEN))
                           || (  after_comma->GetParentType() == CT_OC_BLOCK_EXPR
-                             || after_comma->GetParentType() == CT_CPP_LAMBDA
+                             || (  language_is_set(LANG_CPP)
+                                && after_comma->GetParentType() == CT_CPP_LAMBDA)
                              || after_comma->Is(CT_BRACE_OPEN))))
                      {
                         newline_iarf(pc, IARF_ADD);
@@ -3653,7 +3660,8 @@ static bool one_liner_nl_ok(Chunk *pc)
       log_rule_B("nl_cpp_lambda_leave_one_liners");
 
       if (  options::nl_cpp_lambda_leave_one_liners()
-         && ((pc->GetParentType() == CT_CPP_LAMBDA)))
+         && (  language_is_set(LANG_CPP)
+            && pc->GetParentType() == CT_CPP_LAMBDA))
       {
          LOG_FMT(LNL1LINE, "%s(%d): false (lambda)\n", __func__, __LINE__);
          return(false);
@@ -4269,7 +4277,8 @@ void newlines_cleanup_braces(bool first)
                                  options::nl_type_brace_init_lst_open(), true);
             }
             // Handle nl_after_brace_open
-            else if (  (  pc->GetParentType() == CT_CPP_LAMBDA
+            else if (  (  (  language_is_set(LANG_CPP)
+                          && pc->GetParentType() == CT_CPP_LAMBDA)
                        || pc->GetLevel() == pc->GetBraceLevel())
                     && options::nl_after_brace_open())
             {
@@ -5303,7 +5312,8 @@ void newlines_functions_remove_extra_blank_lines()
 
       if (  pc->IsNot(CT_BRACE_OPEN)
          || (  pc->GetParentType() != CT_FUNC_DEF
-            && pc->GetParentType() != CT_CPP_LAMBDA))
+            && (  language_is_set(LANG_CPP)
+               && pc->GetParentType() != CT_CPP_LAMBDA)))
       {
          continue;
       }
