@@ -103,7 +103,7 @@ static const chunk_tag_t symbols2[] =
    { "||",      CT_BOOL,         LANG_ALL                               },                     // 29
    { "~=",      CT_COMPARE,      LANG_D                                 },                     // 30
    { "~~",      CT_COMPARE,      LANG_D                                 },                     // 31
-   { "=>",      CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D           },                     // 32
+   { "=>",      CT_LAMBDA_RET,   LANG_VALA | LANG_CS | LANG_D           },                     // 32
    { "??",      CT_COMPARE,      LANG_CS | LANG_VALA                    },                     // 33
    { R"_(<%)_", CT_BRACE_OPEN,   LANG_C | LANG_CPP | LANG_OC | FLAG_DIG },                     // digraph {
    { R"_(%>)_", CT_BRACE_CLOSE,  LANG_C | LANG_CPP | LANG_OC | FLAG_DIG },                     // digraph }

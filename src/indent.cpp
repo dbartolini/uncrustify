@@ -1352,7 +1352,7 @@ void indent_text()
             }
 
             if (  (  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
-                  && frm.top().type == CT_LAMBDA)
+                  && frm.top().type == CT_LAMBDA_RET)
                && (  pc->Is(CT_SEMICOLON)
                   || pc->Is(CT_COMMA)
                   || pc->Is(CT_BRACE_OPEN)))
@@ -1829,7 +1829,7 @@ void indent_text()
          }
          else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && options::indent_cs_delegate_brace()
-                 && (  pc->GetParentType() == CT_LAMBDA
+                 && (  pc->GetParentType() == CT_LAMBDA_RET
                     || pc->GetParentType() == CT_DELEGATE))
          {
             log_rule_B("indent_cs_delegate_brace");
@@ -1847,7 +1847,7 @@ void indent_text()
          else if (  language_is_set(LANG_CS | LANG_JAVA)
                  && !options::indent_cs_delegate_brace()
                  && !options::indent_align_paren()
-                 && (  pc->GetParentType() == CT_LAMBDA
+                 && (  pc->GetParentType() == CT_LAMBDA_RET
                     || pc->GetParentType() == CT_DELEGATE))
          {
             log_rule_B("indent_cs_delegate_brace");
@@ -2733,13 +2733,13 @@ void indent_text()
                         && frm.at(idx).type != CT_QUESTION
                         && frm.at(idx).type != CT_COND_COLON
                         && (  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
-                           && frm.at(idx).type != CT_LAMBDA)
+                           && frm.at(idx).type != CT_LAMBDA_RET)
                         && frm.at(idx).type != CT_ASSIGN_NL)
                      || frm.at(idx).pc->IsOnSameLine(frm.top().pc))
                   && (  frm.at(idx).type != CT_CLASS_COLON
                      && frm.at(idx).type != CT_CONSTR_COLON
                      && !(  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
-                         && frm.at(idx).type == CT_LAMBDA
+                         && frm.at(idx).type == CT_LAMBDA_RET
                          && frm.at(idx).pc->GetPrevNc()->GetType() == CT_NEWLINE)))
             {
                if (idx == 0)
@@ -3338,7 +3338,7 @@ void indent_text()
          frm.top().indent_tmp = frm.top().indent;
          log_indent_tmp();
       }
-      else if (  pc->Is(CT_LAMBDA)
+      else if (  pc->Is(CT_LAMBDA_RET)
               && (language_is_set(LANG_CS | LANG_JAVA))
               && pc->GetNextNcNnlNpp()->IsNot(CT_BRACE_OPEN)
               && options::indent_cs_delegate_body())

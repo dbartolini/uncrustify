@@ -904,8 +904,8 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
    }
 
    if (  language_is_set(LANG_CS | LANG_VALA | LANG_JAVA)
-      && (  first->Is(CT_LAMBDA)
-         || second->Is(CT_LAMBDA)))
+      && (  first->Is(CT_LAMBDA_RET)
+         || second->Is(CT_LAMBDA_RET)))
    {
       // Add or remove space around assignment operator '=', '+=', etc.
       log_rule("sp_assign (lambda)");

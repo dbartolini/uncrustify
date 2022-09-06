@@ -2695,7 +2695,7 @@ void tokenize(const deque<int> &data, Chunk *ref)
          && chunk.GetType() == CT_MEMBER
          && !memcmp(chunk.Text(), "->", 2))
       {
-         chunk.SetType(CT_LAMBDA);
+         chunk.SetType(CT_LAMBDA_RET);
       }
 
       // Don't create an entry for whitespace

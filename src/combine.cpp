@@ -604,7 +604,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
          return;
       }
 
-      if (  (  pc->Is(CT_LAMBDA)
+      if (  (  pc->Is(CT_LAMBDA_RET)
             || pc->Is(CT_DELEGATE))
          && next->Is(CT_BRACE_OPEN))
       {
@@ -623,7 +623,7 @@ void do_symbol_check(Chunk *prev, Chunk *pc, Chunk *next)
    }
 
    if (  language_is_set(LANG_JAVA)
-      && pc->Is(CT_LAMBDA)
+      && pc->Is(CT_LAMBDA_RET)
       && next->Is(CT_BRACE_OPEN))
    {
       set_paren_parent(next, pc->GetType());
