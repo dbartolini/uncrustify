@@ -1686,9 +1686,13 @@ void indent_text()
          {
             LOG_FMT(LINDENT2, "%s(%d): indent_macro_brace\n", __func__, __LINE__);
          }
-         else if (  options::indent_cpp_lambda_body()
-                 && (  language_is_set(LANG_CPP)
-                    && pc->GetParentType() == CT_CPP_LAMBDA))
+         else if (  (  language_is_set(LANG_CPP)
+                    && options::indent_cpp_lambda_body()
+                    && pc->GetParentType() == CT_CPP_LAMBDA)
+                 || (  language_is_set(LANG_CS | LANG_JAVA | LANG_VALA)
+                    && options::indent_cs_delegate_brace()
+                    && (  pc->GetParentType() == CT_LAMBDA_RET
+                       || pc->GetParentType() == CT_DELEGATE)))
          {
             log_rule_B("indent_cpp_lambda_body");
             frm.top().brace_indent = frm.prev().indent;
@@ -1824,47 +1828,6 @@ void indent_text()
             frm.top().indent_tmp = frm.top().indent;
             log_indent_tmp();
 
-            frm.prev().indent_tmp = frm.top().indent_tmp;
-            log_indent_tmp();
-         }
-         else if (  language_is_set(LANG_CS | LANG_JAVA)
-                 && options::indent_cs_delegate_brace()
-                 && (  pc->GetParentType() == CT_LAMBDA_RET
-                    || pc->GetParentType() == CT_DELEGATE))
-         {
-            log_rule_B("indent_cs_delegate_brace");
-            frm.top().brace_indent = 1 + ((pc->GetBraceLevel() + 1) * indent_size);
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
-            log_indent();
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
-            log_indent_tmp();
-
-            frm.prev().indent_tmp = frm.top().indent_tmp;
-            log_indent_tmp();
-         }
-         else if (  language_is_set(LANG_CS | LANG_JAVA)
-                 && !options::indent_cs_delegate_brace()
-                 && !options::indent_align_paren()
-                 && (  pc->GetParentType() == CT_LAMBDA_RET
-                    || pc->GetParentType() == CT_DELEGATE))
-         {
-            log_rule_B("indent_cs_delegate_brace");
-            log_rule_B("indent_align_paren");
-            frm.top().brace_indent = frm.prev().indent;
-
-            // Issue # 1620, UNI-24090.cs
-            if (frm.prev().pc->IsOnSameLine(frm.top().pc->GetPrevNcNnlNpp()))
-            {
-               frm.top().brace_indent -= indent_size;
-            }
-            indent_column_set(frm.top().brace_indent);
-            frm.top().indent = indent_column + indent_size;
-            log_indent();
-            frm.top().indent_tab = frm.top().indent;
-            frm.top().indent_tmp = frm.top().indent;
-            log_indent_tmp();
             frm.prev().indent_tmp = frm.top().indent_tmp;
             log_indent_tmp();
          }
@@ -3339,7 +3302,7 @@ void indent_text()
          log_indent_tmp();
       }
       else if (  pc->Is(CT_LAMBDA_RET)
-              && (language_is_set(LANG_CS | LANG_JAVA))
+              && (language_is_set(LANG_CS | LANG_JAVA | LANG_VALA))
               && pc->GetNextNcNnlNpp()->IsNot(CT_BRACE_OPEN)
               && options::indent_cs_delegate_body())
       {

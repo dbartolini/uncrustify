@@ -13,6 +13,12 @@ Func(
 	foo =>
 {
 	bar();
+	apple(
+		"test",
+		() =>
+	{
+		return;
+	});
 });
 
 Func(
