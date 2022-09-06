@@ -37,8 +37,8 @@
     [TestClassRequest performMethod:TestClassRequestMethodPOST
                     responseHandler:^(NSURLResponse *response) {
                         dispatch_after(retryTime, dispatch_get_main_queue(), ^(void) {
-                            [self postSelection:testName selection:selection];
-                        });
+                                [self postSelection:testName selection:selection];
+                            });
                     }];
 
     [UIView transitionWithView:self.view.window duration:0.75 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{

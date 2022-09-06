@@ -2940,7 +2940,7 @@ void indent_text()
             }
             log_indent();
 
-            if (  pc->GetLevel() == pc->GetBraceLevel()
+            if (  pc->GetLevel() >= pc->GetBraceLevel()
                && !options::indent_ignore_first_continue()
                && (  pc->Is(CT_FPAREN_OPEN)
                   || pc->Is(CT_RPAREN_OPEN)                   // Issue #1170

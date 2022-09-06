@@ -1173,3 +1173,5 @@
 60109  cpp/sp_qualifier_ptr_star_trailing-a.cfg             cpp/sp_qualifier_ptr_star.cpp
 60110  cpp/sp_qualifier_ptr_star_trailing-r.cfg             cpp/sp_qualifier_ptr_star.cpp
 60111  cpp/sp_qualifier_ptr_star_trailing-f.cfg             cpp/sp_qualifier_ptr_star.cpp
+
+60200  cpp/Issue_3752.cfg									cpp/nested-indent_continue.cpp
