@@ -109,13 +109,19 @@ Chunk *search_for_colon(Chunk *pc_question)
 
          if (colon_found)
          {
-            pc2->SetType(CT_COND_COLON);
+            if (!pc2->TestFlags(PCF_IN_ARRAY_SUBSCR))
+            {
+               pc2->SetType(CT_COND_COLON);
+            }
             return(pc2);
          }
          else
          {
             // E2 found   orig line is 23, orig col is 3
-            pc2->SetType(CT_COND_COLON);
+            if (!pc2->TestFlags(PCF_IN_ARRAY_SUBSCR))
+            {
+               pc2->SetType(CT_COND_COLON);
+            }
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
             pc2->SetParent(pc_question);              // save the question token

@@ -1375,6 +1375,14 @@ sp_before_bit_colon;
 extern Option<iarf_e>
 sp_after_bit_colon;
 
+// (Vala) Add or remove space before an array slice colon ':'.
+extern Option<iarf_e>
+sp_before_slice_colon;
+
+// (Vala) Add or remove space after an array slice colon ':'.
+extern Option<iarf_e>
+sp_after_slice_colon;
+
 // If true, a <TAB> is inserted after #define.
 extern Option<bool>
 force_tab_after_define;

@@ -372,6 +372,7 @@ enum E_Token
    // Vala stuff
    CT_CONSTRUCT,        // braced "construct { }" or qualifier "(construct int x)"
    CT_LAMBDA,
+   CT_SLICE_COLON,      // colon in array slice "arr[3:14]"
 
    // Java
    CT_ASSERT,       // assert EXP1 [ : EXP2 ] ;

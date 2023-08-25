@@ -20,3 +20,9 @@
 70310  vala/mda_space_a.cfg                 vala/mdarray_space.vala
 70311  vala/sp_after_comma-a.cfg            vala/mdarray_space.vala
 70312  vala/mda_space_c.cfg                 vala/mdarray_space.vala
+70313  vala/sp_before_slice_colon-a.cfg     vala/array_slice.vala
+70314  vala/sp_before_slice_colon-r.cfg     vala/array_slice.vala
+70315  vala/sp_before_slice_colon-f.cfg     vala/array_slice.vala
+70316  vala/sp_after_slice_colon-a.cfg      vala/array_slice.vala
+70317  vala/sp_after_slice_colon-r.cfg      vala/array_slice.vala
+70318  vala/sp_after_slice_colon-f.cfg      vala/array_slice.vala

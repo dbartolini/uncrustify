@@ -849,6 +849,7 @@ bool Chunk::IsColon() const
          || Is(CT_LABEL_COLON)
          || Is(CT_OC_COLON)
          || Is(CT_OC_DICT_COLON)
+         || Is(CT_SLICE_COLON)
          || Is(CT_TAG_COLON)
          || Is(CT_WHERE_COLON));
 }

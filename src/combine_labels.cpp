@@ -169,7 +169,8 @@ void combine_labels()
 
          if (  cs_top_is_question(cs, next->GetLevel())
             && !cur->Is(CT_OC_MSG_NAME)
-            && next->TestFlags(PCF_IN_CONDITIONAL))             // Issue #3558
+            && next->TestFlags(PCF_IN_CONDITIONAL)              // Issue #3558
+            && !next->TestFlags(PCF_IN_ARRAY_SUBSCR))           // May be a Vala array slice op [:]
          {
             //log_pcf_flags(LFCN, next->GetFlags());
             next->SetType(CT_COND_COLON);
@@ -264,6 +265,11 @@ void combine_labels()
             else if (next->TestFlags(PCF_OC_BOXED))
             {
                next->SetType(CT_OC_DICT_COLON);
+            }
+            else if (  next->TestFlags(PCF_IN_ARRAY_SUBSCR)
+                    && language_is_set(LANG_VALA))
+            {
+               next->SetType(CT_SLICE_COLON);
             }
             else if (cur->Is(CT_WORD))
             {

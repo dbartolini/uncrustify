@@ -17,6 +17,7 @@
 #include "combine_skip.h"
 #include "flag_braced_init_list.h"
 #include "flag_decltype.h"
+#include "flag_parens.h"
 #include "keywords.h"
 #include "prototypes.h"
 #include "punctuators.h"
@@ -329,6 +330,12 @@ void tokenize_cleanup()
             }
             pc->SetType(CT_WORD);
          }
+      }
+
+      if (  pc->Is(CT_SQUARE_OPEN)
+         && prev->Is(CT_WORD))
+      {
+         flag_parens(pc, PCF_IN_ARRAY_SUBSCR, pc->GetType(), CT_NONE, false);
       }
 
       // Determine the scope stuff (D only)

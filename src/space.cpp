@@ -616,6 +616,22 @@ static iarf_e do_space(Chunk *first, Chunk *second, int &min_sp)
       }
    }
 
+   if (language_is_set(LANG_VALA))
+   {
+      // Vala array slices "[:]"
+      if (first->Is(CT_SLICE_COLON))
+      {
+         log_rule("sp_after_slice_colon");
+         return(options::sp_after_slice_colon());
+      }
+
+      if (second->Is(CT_SLICE_COLON))
+      {
+         log_rule("sp_before_slice_colon");
+         return(options::sp_before_slice_colon());
+      }
+   }
+
    // "a,b" vs. "a, b"
    if (first->Is(CT_COMMA))                         // see the tests cpp:34520-34524
    // see the tests c-sharp:12200-12202
