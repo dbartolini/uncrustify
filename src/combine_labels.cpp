@@ -421,7 +421,7 @@ void combine_labels()
                   {
                      // ignore it, as it is a C# base thingy
                   }
-                  else if (language_is_set(LANG_CS | LANG_D))
+                  else if (language_is_set(LANG_CS | LANG_VALA | LANG_D))
                   {
                      // there should be a better solution for that
                   }

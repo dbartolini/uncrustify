@@ -40,11 +40,12 @@ Chunk *search_for_colon(Chunk *pc_question)
       {
          LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                  __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
-         pc2->SetFlagBits(PCF_IN_CONDITIONAL);
-         log_pcf_flags(LCOMBINE, pc2->GetFlags());
 
          if (colon_found)
          {
+            pc_question->SetFlagBits(PCF_IN_CONDITIONAL);
+            log_pcf_flags(LCOMBINE, pc2->GetFlags());
+
             LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
                     __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
             pc_question->SetParent(pc2);   // back again
@@ -55,8 +56,15 @@ Chunk *search_for_colon(Chunk *pc_question)
          }
          else
          {
-            pc2->SetParent(pc_question);   // save the question token
-            pc_question->SetParent(pc2);   // back again
+            if (!pc2->Is(CT_COMMA))
+            {
+               return(pc2);
+            }
+            else
+            {
+               pc2->SetParent(pc_question);   // save the question token
+               pc_question->SetParent(pc2);   // back again
+            }
          }
       }
       else if (pc2->Is(CT_COMMA))
@@ -125,6 +133,13 @@ Chunk *search_for_colon(Chunk *pc_question)
             colon_found = true;
          }
       }
+      else if (  language_is_set(LANG_CS | LANG_VALA)
+              && pc2->Is(CT_BRACE_OPEN))
+      {
+         // This is probably a function returning a nullable:
+         // word ? fn(...) {
+         return(pc2);
+      }
       pc2 = pc2->GetNextNcNnl();
    }
 
@@ -181,7 +196,8 @@ void mark_question_colon()
       LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
 
-      if (pc->Is(CT_QUESTION))
+      if (  pc->Is(CT_QUESTION)
+         && pc->TestFlags(PCF_IN_CONDITIONAL))
       {
          Chunk *from = pc;
          Chunk *to   = pc->GetParent();
